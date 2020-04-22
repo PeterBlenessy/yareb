@@ -24,7 +24,6 @@ On the terminal, run:
 $ npx create-react-app yareb
 ```
 
-
 After about a minute of installing dependencies, we get a final message on the terminal saying `Happy hacking!` and we are ready to start our new React application by running:
 
 ```bash
@@ -53,6 +52,82 @@ $ git remote -v
 $ git push -u origin master
 ```
 
+## Step 3 - Setting up Electron
 
+### Install electron as a developer dependency:
 
+```bash
+$ npm i -D electron
+```
 
+### Modify package.json file so that the main entry points to main.js file:
+
+```json
+{
+  "main": "main.js",
+  "homepage": ".",
+}
+```
+Change  `"scripts":` section in package.json file
+
+```json
+{
+  "scripts": {
+    "serve": "react-scripts start",
+    "start": "electron ."
+  }
+}
+```
+
+### Create the `main.js` file based on a minimal template:
+
+```javascript
+const { app, BrowserWindow } = require('electron');
+
+let win;
+
+function createWindow() {
+  win = new BrowserWindow({ width: 800, height: 600 });
+
+  //win.loadFile('index.html');
+  win.loadURL(`file://${__dirname}/build/index.html`);
+  
+  win.on('closed', () => {
+    win = null;
+  });
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (win === null) {
+    createWindow();
+  }
+});
+```
+
+### Verify that the application builds and runs fine:
+
+```bash
+# Build first to create the index.html file we set in main.js to be loaded when we run the Electron application.
+$ npm run build
+
+# Start the Electron application.
+$ npm start
+```
+
+The application starts and behaves as expected, which takes us to the next commit to GitHub.
+
+```bash
+$ git status
+$ git add .
+$ git commit -m "Step 2 - Bootstrapping a React Application - DONE"
+$ git remote -v
+$ git push -u origin master
+```
