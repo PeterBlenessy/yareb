@@ -10,7 +10,7 @@ I will be covering the below steps:
 - [x] [Step  2 - Bootstrapping a React Application](#step-2)
 - [x] [Step  3 - Setting up Electron](#step-3)
 - [x] [Step  4 - Packaging the application](#step-4)
-- [ ] Step  5 - Publishing the application
+- [x] [Step  5 - Publishing the application](#step-5)
 - [ ] Step  6 - Setting up automatic updates
 - [ ] Step  7 - Setting up automated testing
 - [ ] Step  8 - Setting up analytics
