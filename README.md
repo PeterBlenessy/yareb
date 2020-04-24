@@ -302,3 +302,76 @@ Here is the final output:
 We are now ready with building and packaging a distributable artifact on macOS. Let's push our changes to GitHub and prepare for the next step, which is publishing.
 
 Further configuration of the packaging output can be done as described at: https://www.electron.build/configuration/dmg, but we are OK for now.
+
+## Step  5 - Publishing the application {#step-5}
+
+Publishing the application is a rather straight forward step.
+
+We need to install `electron-updater`and make somre changes to `package.json` and `public/electron.js` files.
+
+```bash
+# Install electron-updater
+$ npm i electron-updater
+```
+
+Updates in `package.json`:
+
+```json
+{
+
+  "scripts": {
+    ...
+    "publish:github": "electron-builder --macos -p always".
+    ...
+  }
+
+// Make changes to "build":
+  "build": {
+    ...
+    "publish": {
+      "provider": "github",
+      "owner": "PeterBlenessy",
+      "repo": "yareb"
+    }
+  }
+}
+```
+
+Updates in `electron.js`:
+
+```javascript
+// Import electron-updater
+const { autoUpdater } = require('electron-updater');
+
+...
+
+function createWindow() {
+  ...
+  
+  win.loadURL(...)
+
+  // Check for updates 
+  autoUpdater.checkForUpdatesAndNotify();
+  ...
+}
+```
+
+In order to be able to upload the candidate package to GitHub for publishing we need to generate a GitHub token which we will use when running the publish script.
+
+  Check out the following links to learn more about how to get started with GitHub `tokens`.
+  - https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
+  - https://github.com/settings/tokens/new
+
+  ```bash
+  $ GH_TOKEN=<use-your-gh_token-here> npm run publish:github
+  ```
+
+As a word of caution, don't share your GH_TOKEN with anyone and donät upload it to GitHub.
+
+In the releases section of your GitHub repository you will now be able to see the new DRAFT release, in my case 0.1.0 release. The release does not have a tag set yet since we have not published it yet. This is done by editing the release when we feel ready for release, add the tag you want to use for the release and press the "Publish release" button. In my case, I have also checked the checkbox "This is a pre-release" since I'd like to cover som more steps in this project before I can call the "application" production ready.
+
+This finalizes this step and it's time to push our changes code to GitHub.
+
+
+
+
