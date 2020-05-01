@@ -1,14 +1,14 @@
 {
   "name": "yareb",
   "description": "Yet Another React Electron Boilerplate",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "author": "Peter Blenessy",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "electron-updater": "^4.2.5",
+    "electron-updater": "^4.3.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1"
@@ -19,8 +19,8 @@
     "serve": "react-scripts start",
     "start": "electron .",
     "build": "react-scripts build",
-    "build:macos": "electron-builder --macos --dir -c.mac.identity=null",
-    "dist:macos": "electron-builder --macos -c.mac.identity=null",
+    "build:macos": "electron-builder --macos --dir",
+    "dist:macos": "electron-builder --macos",
     "publish:github": "electron-builder --macos -p always",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,19 +41,24 @@
     ]
   },
   "devDependencies": {
-    "electron": "^8.2.3",
-    "electron-builder": "^22.5.1"
+    "electron": "^8.2.4",
+    "electron-builder": "^22.6.0",
+    "electron-builder-notarize": "^1.1.2",
+    "electron-notarize": "^0.3.0"
   },
   "build": {
     "productName": "yareb",
     "appId": "com.electron.boilerplates.yareb",
     "mac": {
       "artifactName": "${productName}-${version}-osx.${ext}",
-      "category": "your.app.category.type",
+      "category": "public.app-category.developer-tools",
+      "hardenedRuntime": true,
+      "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
       "target": [
         "dmg"
       ]
     },
+    "afterSign": "electron-builder-notarize",
     "publish": {
       "provider": "github",
       "owner": "PeterBlenessy",

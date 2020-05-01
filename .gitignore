@@ -1,3 +1,7 @@
+# electron-builder .env file
+electron-builder.env
+
+
 # Logs
 logs
 *.log

@@ -11,11 +11,12 @@ I will be covering the below steps:
 - [x] [Step  3 - Setting up Electron](#step-3)
 - [x] [Step  4 - Packaging the application](#step-4)
 - [x] [Step  5 - Publishing the application](#step-5)
-- [ ] Step  6 - Setting up automatic updates
-- [ ] Step  7 - Setting up automated testing
-- [ ] Step  8 - Setting up analytics
-- [ ] Step  9 - Adding system tray support
-- [ ] Step 10 - Customising the applicationß
+- [ ] [Step  6 - Setting up Code Signing](#step-6)
+- [ ] Step  7 - Setting up automatic updates
+- [ ] Step  8 - Setting up automated testing
+- [ ] Step  9 - Setting up analytics
+- [ ] Step 10 - Adding system tray support
+- [ ] Step 11 - Customising the applicationß
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
 
@@ -366,12 +367,130 @@ In order to be able to upload the candidate package to GitHub for publishing we 
   $ GH_TOKEN=<use-your-gh_token-here> npm run publish:github
   ```
 
-As a word of caution, don't share your GH_TOKEN with anyone and donät upload it to GitHub.
+As a word of caution, don't share your GH_TOKEN with anyone and don't upload it to GitHub.
 
 In the releases section of your GitHub repository you will now be able to see the new DRAFT release, in my case 0.1.0 release. The release does not have a tag set yet since we have not published it yet. This is done by editing the release when we feel ready for release, add the tag you want to use for the release and press the "Publish release" button. In my case, I have also checked the checkbox "This is a pre-release" since I'd like to cover som more steps in this project before I can call the "application" production ready.
 
 This finalizes this step and it's time to push our changes code to GitHub.
 
+## Step  6 - Setting up Code Signing {#step-6}
 
+> Starting with MacOS 10.14.5, all signed applications by ‘new’ developers will need to be notarized or they will trigger Apple’s Gatekeeper software and prevent users from installing your app. That means that aside from signing your application, you will need to notarize it as well. This is how to successfully notarize your Electron application.
+
+The process to a successfuly signed installer is:
+
+1. Setup an Apple Developer Program account
+2. Sign the application with a valid Apple Developer ID
+3. Notarize the signed application
+4. Package the app into a `dmg` (which is NOT signed and NOT noterized!)
+
+### 6.1 - Setting up an Apple Developer Program account
+
+For this to work on OSX, the application has to be signed and notarized. To do that, I need to set up an Apple developer account and generate certificates. The Apple Developer Program account takes a few days to get enrolled,  but when it's done, certificates can be generated either from the web site of from within Xcode. I will not dive further into this topic, but refer to the below links for more details.
+
+- [ElectronBuilder - Code Signing](https://www.electron.build/code-signing)
+- [Manage signing certificates](https://help.apple.com/xcode/mac/current/#/dev154b28f09)
+
+I have followed the steps in the above articles and have listed them below.
+
+### 6.2 - Signing the application
+
+Assuming that the Apple Developer ID is set up, remove `-c.mac.identity=null` from `"build:macos"` and `"dist:macos"` to configure `electron-builder` to attempt to sign the application.
+
+```json
+{
+  "scripts": {
+    ...
+    "dist:macos": "electron-builder --macos",
+    ...
+  }
+}
+```
+
+Run:
+
+```bash
+$ npm run dist:macos
+```
+
+This gives us an additional print out in the terminal:
+
+```bash
+ • signing         file=dist/mac/yareb.app identityName=Developer ID Application: <...> identityHash=<...> provisioningProfile=none
+```
+
+You can check that the application signing is successful by running:
+
+```bash
+$ codesign -dv --verbose=4 /PathToApp/yareb.app
+```
+
+#### 6.3 - Notarizing the application
+
+Several articles describe in detail the process of noterization also providing source code for the implementation.
+
+- [Notarizing your Electron application](https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/).
+- [Notarize Electron apps on Mac OS automatically with electron-builder & electron-notarize](https://medium.com/@TwitterArchiveEraser/notarize-electron-apps-7a5f988406db)
+
+I decided to however to use the `electron-builder-noterize` module since it implements notarization as suggested by the above sources and allows me to have less own source code to maintain in the repo. See [electron-builder-notarize](https://www.npmjs.com/package/electron-builder-notarize) for more details.
+
+We add the required modules as developer dependencies:
+
+```bash
+$ npm i -D electron-notarize
+$ npm i -D electron-builder-notarize
+```
+
+Following the module description page and the other two articles, we update the configuration for `"mac"` for `electron-builder` in the `package.json` file to
+
+- use [Hardened Runtime](https://developer.apple.com/documentation/security/hardened_runtime)
+- avoid assessing that signing was successful
+- use the entitlements from `electron-builder-noterize` module
+
+```json
+{
+  "mac": {
+    ...
+    "hardenedRuntime" : true,
+    "gatekeeperAssess": false,
+    "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.plist",
+    ...
+  },
+  "afterSign": "electron-builder-notarize",
+  ...
+}
+```
+
+Now we run `npm run dist:macos` to execute all of the steps needed to create a **distributable dmg installer image**, i.e. *build*, *sign*, *notarize* and *packaging* the app.
+
+```bash
+$ npm run dist:macos
+...
+Notarizing com.electron.boilerplates.yareb found at /Users/peter/Development/electron-projects/yareb/dist/mac/yareb.app
+Done notarizing com.electron.boilerplates.yareb
+```
+
+You may run into the below error:
+
+```bash
+Error: Failed to upload app to Apple's notarization servers
+xcrun: error: unable to find utility "altool", not a developer tool or in PATH
+```
+
+To fix it, run:
+
+```bash
+$ sudo xcode-select -r
+```
+
+>Unsets  any  user-specified developer directory, so that the developer directory will be found via the default search mechanism. This command must be run  with  superuser  permissions  (see sudo(8)), and will affect all users on the system.
+
+This concludes this step of the learning process. It has been the one with the longest lead time so far due to the Apple Developer Program account setup.
+
+As a last step before we push our changes to GitHub, we also verify that signing and notarization works also when publishing the application. We update `package.json` with `"version": "0.6.0"` to align with the learning step section headings and run:
+
+```bash
+$ GH_TOKEN=<your_github_token> npm run publish:github
+```
 
 
