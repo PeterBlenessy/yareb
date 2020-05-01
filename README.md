@@ -11,7 +11,7 @@ I will be covering the below steps:
 - [x] [Step  3 - Setting up Electron](#step-3)
 - [x] [Step  4 - Packaging the application](#step-4)
 - [x] [Step  5 - Publishing the application](#step-5)
-- [ ] [Step  6 - Setting up Code Signing](#step-6)
+- [x] [Step  6 - Setting up Code Signing](#step-6)
 - [ ] Step  7 - Setting up automatic updates
 - [ ] Step  8 - Setting up automated testing
 - [ ] Step  9 - Setting up analytics
@@ -492,5 +492,7 @@ As a last step before we push our changes to GitHub, we also verify that signing
 ```bash
 $ GH_TOKEN=<your_github_token> npm run publish:github
 ```
+
+It looks all good, the new release appears on GitHub, the DMG can be installed and the application opened with a message that Apple has scanned its contents for malisious code and found none. So I go ahead and push the changes to GitHub.
 
 
