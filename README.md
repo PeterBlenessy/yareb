@@ -308,7 +308,7 @@ Further configuration of the packaging output can be done as described at: https
 
 Publishing the application is a rather straight forward step.
 
-We need to install `electron-updater`and make somre changes to `package.json` and `public/electron.js` files.
+We need to install `electron-updater`and make some changes to `package.json` and `public/electron.js` files.
 
 ```bash
 # Install electron-updater
@@ -494,5 +494,4 @@ $ GH_TOKEN=<your_github_token> npm run publish:github
 ```
 
 It looks all good, the new release appears on GitHub, the DMG can be installed and the application opened with a message that Apple has scanned its contents for malisious code and found none. So I go ahead and push the changes to GitHub.
-
 
