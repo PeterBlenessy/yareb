@@ -1,7 +1,7 @@
 {
   "name": "yareb",
   "description": "Yet Another React Electron Boilerplate",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "Peter Blenessy",
   "private": true,
   "dependencies": {
