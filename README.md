@@ -12,10 +12,10 @@ I will be covering the below steps:
 - [x] [Step  4 - Packaging the application](#step-4)
 - [x] [Step  5 - Publishing the application](#step-5)
 - [x] [Step  6 - Setting up Code Signing](#step-6)
-- [ ] Step  7 - Setting up automatic updates
+- [x] [Step  7 - Setting up automatic updates](#step-7)
 - [ ] Step  8 - Setting up automated testing
 - [ ] Step  9 - Setting up analytics
-- [ ] Step 10 - Adding system tray support
+- [ ] Step 10 - Adding system tray supportß
 - [ ] Step 11 - Customising the applicationß
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
@@ -495,3 +495,33 @@ $ GH_TOKEN=<your_github_token> npm run publish:github
 
 It looks all good, the new release appears on GitHub, the DMG can be installed and the application opened with a message that Apple has scanned its contents for malisious code and found none. So I go ahead and push the changes to GitHub.
 
+## Step  7 - Setting up automatic updates {#step-7}
+
+Closing the loop started in [Step 5 - Publishing the application](step-5) by finalizing [Step 6 - Setting up Code Signing](step-6) I was expecting to be able to update an installed version of the app automatically when a newer version was published to GitHub.
+
+I was wrong.
+
+It took some searching to realize that `electron-updater` is expecting a `zip` target to be available when checking for updates and I only configured `dmg` as target in the `package.json` file when building and packaging for `mac`. If I had skipped configuring specific targets and just went with the defaults which include `zip` as target, I would have succeeded without realizing this quite important detail, so it is actually a win for me - more learning.
+
+So, after updating `package.json` with the below I got the much anticipated update notification and the new version of the app.
+
+```json
+{
+  ...
+  "version": "0.6.4",
+  ...
+  "build": {
+    ...
+    "mac": {
+      ...
+      "target": [
+        "zip",
+        "dmg"
+      ]
+  ...
+  }
+}
+```
+I also updated the title of the application window to `Yet Another React Electron Boilerplate` as it should be.
+
+So time to increase the version to 0.7.0 and push the changes to GitHub.

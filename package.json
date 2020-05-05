@@ -1,14 +1,13 @@
 {
   "name": "yareb",
   "description": "Yet Another React Electron Boilerplate",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "author": "Peter Blenessy",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "electron-log": "^4.1.2",
     "electron-updater": "^4.3.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -58,6 +57,7 @@
       "hardenedRuntime": true,
       "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
       "target": [
+        "zip",
         "dmg"
       ]
     },
