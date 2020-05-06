@@ -6,13 +6,13 @@ On my path to obtaining some hands-on practical experience in DevOps, I decided 
 
 I will be covering the below steps:
 
-- [x] [Step  1 - Setting up the development environment](#step-1)
-- [x] [Step  2 - Bootstrapping a React Application](#step-2)
-- [x] [Step  3 - Setting up Electron](#step-3)
-- [x] [Step  4 - Packaging the application](#step-4)
-- [x] [Step  5 - Publishing the application](#step-5)
-- [x] [Step  6 - Setting up Code Signing](#step-6)
-- [x] [Step  7 - Setting up automatic updates](#step-7)
+- [x] [Step 1 - Setting up the development environment](#step-1---setting-up-the-development-environment)
+- [x] [Step 2 - Bootstrapping a React Application](#step-2---bootstrapping-a-react-application)
+- [x] [Step 3 - Setting up Electron](#step-3---setting-up-electron)
+- [x] [Step 4 - Packaging the application](#step-4---packaging-the-application)
+- [x] [Step 5 - Publishing the application](#step-5---publishing-the-application)
+- [x] [Step 6 - Setting up Code Signing](#step-6---setting-up-code-signing)
+- [x] [Step 7 - Setting up automatic updates](#step-7---setting-up-automatic-updates)
 - [ ] Step  8 - Setting up automated testing
 - [ ] Step  9 - Setting up analytics
 - [ ] Step 10 - Adding system tray supportß
@@ -20,7 +20,7 @@ I will be covering the below steps:
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
 
-## Step 1 - Setting up the development environment {#step-1}
+## Step 1 - Setting up the development environment
 
 First things first, you got to have `Node.js` and `npm` installed and this is a good place to start: [Download and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
@@ -28,7 +28,7 @@ Then install your favorite IDE, I use [Visual Studio Code](https://code.visualst
 
 Finally, I also created this GitHub repository.
 
-## Step 2 - Bootstrapping a React Application {#step-2}
+## Step 2 - Bootstrapping a React Application
 
 Now we're ready to create the very first application bootstrapped with [create-react-app](https://github.com/facebook/create-react-app).
 
@@ -66,7 +66,7 @@ $ git remote -v
 $ git push -u origin master
 ```
 
-## Step 3 - Setting up Electron {#step-3}
+## Step 3 - Setting up Electron
 
 ### Install electron as a developer dependency:
 
@@ -146,13 +146,13 @@ $ git remote -v
 $ git push -u origin master
 ```
 
-## Step4 - Packaging the application {#step-4}
+## Step 4 - Packaging the application
 
 So now we have a simple application, which can be run outside of a web browser, as expected. Next up is to set up packaging so we can distribute it.
 
 Since I'm a mac user, the primary focus will be on packaging for macOS. I will cover Linux and Windows as well in some detail, but will not set up local environments for verifying on those platforms. I plan to cover verification on Linux and Window at a later step, when covering CI/CD and test automation. I figure, that GitHub has support for this already, either via Docker or by using VMs, so, at least in theory, I feel pretty confident that I can leave it for now.
 
-### Preparing for packaging by installing [electron-builder](https://www.electron.build/) as a developer dependency:
+### 4.1 Preparing for packaging by installing [electron-builder](https://www.electron.build/) as a developer dependency:
 
 Quoting from their website, electron-builder is:
 
@@ -164,7 +164,7 @@ So let's run:
 $ npm i -D electron-builder
 ```
 
-### Packaging for macOS
+### 4.2 Packaging for macOS
 
 We need to modify the `package.json` file and add macos build option:
 
@@ -176,7 +176,7 @@ We need to modify the `package.json` file and add macos build option:
 }
 ```
 
-#### Setting up a development build
+#### 4.2.1 Setting up a development build
 
 Running `npm run build:macos` will create a standard macOS executable called `yareb.app` and put it in the `dist/mac` folder.
 
@@ -251,7 +251,7 @@ Here is the final output:
   • skipped macOS code signing  reason=identity explicitly is set to null
 ```
 
-#### Setting up a production build
+#### 4.2.2 Setting up a production build
 
 To set up a production build we need to modify the `package.json` file:
 
@@ -304,7 +304,7 @@ We are now ready with building and packaging a distributable artifact on macOS. 
 
 Further configuration of the packaging output can be done as described at: https://www.electron.build/configuration/dmg, but we are OK for now.
 
-## Step  5 - Publishing the application {#step-5}
+## Step 5 - Publishing the application
 
 Publishing the application is a rather straight forward step.
 
@@ -373,7 +373,7 @@ In the releases section of your GitHub repository you will now be able to see th
 
 This finalizes this step and it's time to push our changes code to GitHub.
 
-## Step  6 - Setting up Code Signing {#step-6}
+## Step 6 - Setting up Code Signing
 
 > Starting with MacOS 10.14.5, all signed applications by ‘new’ developers will need to be notarized or they will trigger Apple’s Gatekeeper software and prevent users from installing your app. That means that aside from signing your application, you will need to notarize it as well. This is how to successfully notarize your Electron application.
 
@@ -495,9 +495,9 @@ $ GH_TOKEN=<your_github_token> npm run publish:github
 
 It looks all good, the new release appears on GitHub, the DMG can be installed and the application opened with a message that Apple has scanned its contents for malisious code and found none. So I go ahead and push the changes to GitHub.
 
-## Step  7 - Setting up automatic updates {#step-7}
+## Step 7 - Setting up automatic updates
 
-Closing the loop started in [Step 5 - Publishing the application](step-5) by finalizing [Step 6 - Setting up Code Signing](step-6) I was expecting to be able to update an installed version of the app automatically when a newer version was published to GitHub.
+Closing the loop started in [Step 5 - Publishing the application](#step-5---publishing-the-application) by finalizing [Step 6 - Setting up Code Signing](#step-6---setting-up-code-signing) I was expecting to be able to update an installed version of the app automatically when a newer version was published to GitHub.
 
 I was wrong.
 
