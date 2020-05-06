@@ -68,13 +68,13 @@ $ git push -u origin master
 
 ## Step 3 - Setting up Electron
 
-### Install electron as a developer dependency:
+Install electron as a developer dependency:
 
 ```bash
 $ npm i -D electron
 ```
 
-### Modify package.json file so that the main entry points to main.js file:
+Modify `package.json` file so that the main entry points to `main.js` file:
 
 ```json
 {
@@ -82,7 +82,8 @@ $ npm i -D electron
   "homepage": ".",
 }
 ```
-Change  `"scripts":` section in package.json file
+
+Change  `"scripts":` section in `package.json` file
 
 ```json
 {
@@ -93,7 +94,7 @@ Change  `"scripts":` section in package.json file
 }
 ```
 
-### Create the `main.js` file based on a minimal template:
+Create the `main.js` file based on a minimal template:
 
 ```javascript
 const { app, BrowserWindow } = require('electron');
@@ -126,7 +127,7 @@ app.on('activate', () => {
 });
 ```
 
-### Verify that the application builds and runs fine:
+Verify that the application builds and runs fine:
 
 ```bash
 # Build first to create the index.html file we set in main.js to be loaded when we run the Electron application.
@@ -170,9 +171,13 @@ We need to modify the `package.json` file and add macos build option:
 
 ```json
 {
+  ...
   "scripts": {
+    ...
     "build:macos": "electron-builder --macos --dir"
+    ...
   }
+  ...
 }
 ```
 
@@ -204,8 +209,10 @@ From whithin Visual Studio Code, I simply moved `main.js` to the `public`folder 
 
 ```json
 {
+  ...
   "main": "public/electron.js",
   "homepage": "./",
+  ...
 }
 ```
 
