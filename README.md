@@ -13,10 +13,10 @@ I will be covering the below steps:
 - [x] [Step 5 - Publishing the application](#step-5---publishing-the-application)
 - [x] [Step 6 - Setting up Code Signing](#step-6---setting-up-code-signing)
 - [x] [Step 7 - Setting up automatic updates](#step-7---setting-up-automatic-updates)
-- [ ] Step  8 - Setting up automated testing
+- [x] [Step  8 - Setting up automated testing](#step-8---setting-up-automated-testing)
 - [ ] Step  9 - Setting up analytics
-- [ ] Step 10 - Adding system tray supportß
-- [ ] Step 11 - Customising the applicationß
+- [ ] Step 10 - Adding system tray support
+- [ ] Step 11 - Customising the application
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
 
@@ -197,7 +197,7 @@ The first warning is referring to the same problem and it also gives us a hint o
 
 > public/electron.js not found. Please see https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
 
-Reading the referenced article, I learned that the configuration created by create-react-app (CRA) has some expectations, e.g. on having an `electron.js` file in the `public`folder insted the `main.js` file we've created in the root folder of our project.
+Reading the referenced article, I learned that the configuration created by create-react-app (CRA) has some expectations, e.g. on having an `electron.js` file in the `public` folder insted the `main.js` file we've created in the root folder of our project.
 
 >We’re adding it in the “public” folder instead of “src” so it can get copied to the “build” folder as it is. This is needed for the production version, and it’s explained later.
 
@@ -205,7 +205,7 @@ I don't really like this solution since the article is quite old, written June 1
 
 So here are the suggested changes:
 
-From whithin Visual Studio Code, I simply moved `main.js` to the `public`folder and renamed it to  `electron.js`. Probably not the best way to do it from a git perspective, but I didn't give it a lot of thought.
+From within Visual Studio Code, I simply moved `main.js` to the `public`folder and renamed it to  `electron.js`. Probably not the best way to do it from a git perspective, but I didn't give it a lot of thought.
 
 ```json
 {
@@ -532,3 +532,101 @@ So, after updating `package.json` with the below I got the much anticipated upda
 I also updated the title of the application window to `Yet Another React Electron Boilerplate` as it should be.
 
 So time to increase the version to 0.7.0 and push the changes to GitHub.
+
+
+## Step 8 - Setting up automated testing
+
+When using `create-react-app` to generate the initial code for our app, as we did, a besic level of testing is setup for us. The test code is available in the file `src/App.test.js` and it basically is a check that the _learn react_ link is rendered in the UI. The script for testing is added in the `package.json` file.
+
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "test": "react-scripts test"
+  }
+  ...
+}
+```
+
+To run it:
+
+```bash
+$ npm run test
+```
+
+Tests are being run in _watch mode_, meaning that they get are re-run autommatically every time we save our changes to the code. This is nice.
+
+To print also a `code coverage` report, run:
+
+```bash
+$ npm run test -- --coverage
+```
+
+### Test framework used by Create React App
+
+> Create React App uses Jest as its test runner. To prepare for this integration, we did a major revamp of Jest so if you heard bad things about it years ago, give it another try.
+>
+> Jest is a Node-based runner. This means that the tests always run in a Node environment and not in a real browser. This lets us enable fast iteration speed and prevent flakiness.
+
+Read more about the test setup that comes with Create React App [here](https://create-react-app.dev/docs/running-tests/).
+
+### Component testing
+
+I did not intend to write any additional tests at this point as the purpose with this section was to see how testing was set up and how to use it.
+
+But, while reading the documentation at CRA i found the section regarding [Testing Components](https://create-react-app.dev/docs/running-tests/#testing-components) rather interesting. It gives good advice regarding how to extend the tests based on the purpose.
+
+>There is a broad spectrum of component testing techniques. They range from a “smoke test” verifying that a component renders without throwing, to shallow rendering and testing some of the output, to full rendering and testing component lifecycle and state changes.
+
+So I decided to try out the technique called `shallow rendering` which CRA recommends using to test components in isolation from the child components they render.
+
+Install some additional packages:
+
+```bash
+$ npm install --save enzyme enzyme-adapter-react-16 react-test-renderer
+```
+
+Configure the adapter in `src/setupTests.js` file.
+
+```javascript
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+configure({ adapter: new Adapter() });
+```
+
+Add a smoke test to `src/App.test.js` file.
+
+```javascript
+import React from 'react';
+import { shallow } from 'enzyme';
+import App from './App';
+
+it('renders without crashing', () => {
+  shallow(<App />);
+});
+```
+
+Another option to testing components is to use the `React Testing Library`.
+
+>As an alternative or companion to enzyme, you may consider using react-testing-library. react-testing-library is a library for testing React components in a way that resembles the way the components are used by end users. It is well suited for unit, integration, and end-to-end testing of React components and applications. It works more directly with DOM nodes, and therefore it's recommended to use with jest-dom for improved assertions.
+
+At this point however, I am quite happy with what I've learned and will not dig into any more details. 
+
+### Setting up a continuous integration (CI) workflow using GitHub Actions
+
+So far, we have focused on running the tests locally. The next step is to run it on GitHub whenever we push code to the repository. For this, we set up a CI workflow using [GitHub Actions](https://help.github.com/en/actions) on [GitHub-hosted runners](https://help.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners).
+
+In the root folder of the project, run:
+
+```bash
+$ mkdir -p ".github/workflows" && touch ".github/workflows/ci.yml"
+```
+
+Then copy the contents of [node.js.yml](https://github.com/actions/starter-workflows/blob/master/ci/node.js.yml) to our `ci.yml` file.
+
+Following the description on [Using Node.js with GitHub Actions](https://help.github.com/en/actions/language-and-framework-guides/using-nodejs-with-github-actions) we end up with the contents in our `ci.yml` file.
+
+Read more about [continuous integration (CI)](https://help.github.com/en/actions/building-and-testing-code-with-continuous-integration/about-continuous-integration).
+
+So now, let's push the latest changes to GitHub and see if the workflow we set up for GitHub Actions works as planned.

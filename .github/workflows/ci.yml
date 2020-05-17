@@ -1,0 +1,30 @@
+name: Continuous Integration Tests
+
+on: 
+  push:
+    branches: [ master ]
+  pull_requests:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ macos-latest ]
+        node-version: [ 12.x ]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm build --if-present
+      - run: npm test
+        enc:
+          CI: true
