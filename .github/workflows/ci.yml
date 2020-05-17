@@ -26,5 +26,5 @@ jobs:
       - run: npm install
       - run: npm build --if-present
       - run: npm test
-        enc:
+        env:
           CI: true
