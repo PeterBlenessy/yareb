@@ -18,7 +18,15 @@ function App() {
         >
           Learn React
         </a>
+
+        <p>
+        To get information about the devices and behavior of our users, we use Nucleus to provide analytics. 
+        This service gives us insight about how users interact with our software. 
+        It does not store any personal identifiable information. 
+        Visit their <a className="App-link" href="https://www.nucleus.sh/transparency" target="_blank" rel="noopener noreferer">transparency page</a> to get the full list of data they collect.
+        </p>
       </header>
+
     </div>
   );
 }

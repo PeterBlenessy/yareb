@@ -13,8 +13,8 @@ I will be covering the below steps:
 - [x] [Step 5 - Publishing the application](#step-5---publishing-the-application)
 - [x] [Step 6 - Setting up Code Signing](#step-6---setting-up-code-signing)
 - [x] [Step 7 - Setting up automatic updates](#step-7---setting-up-automatic-updates)
-- [x] [Step  8 - Setting up automated testing](#step-8---setting-up-automated-testing)
-- [ ] Step  9 - Setting up analytics
+- [x] [Step 8 - Setting up automated testing](#step-8---setting-up-automated-testing)
+- [x] [Step 9 - Setting up analytics](#step-9---setting-up-analytics)
 - [ ] Step 10 - Adding system tray support
 - [ ] Step 11 - Customising the application
 
@@ -630,3 +630,61 @@ Following the description on [Using Node.js with GitHub Actions](https://help.gi
 Read more about [continuous integration (CI)](https://help.github.com/en/actions/building-and-testing-code-with-continuous-integration/about-continuous-integration).
 
 So now, let's push the latest changes to GitHub and see if the workflow we set up for GitHub Actions works as planned.
+
+## Step 9 - Setting up analytics
+
+I decided to try out [Nucleus](https://nucleus.sh/electron) for application analytics. I've been working with Google Analytics before and there is quite som overhead to start and Nucleus seemed pretty straight forward and simple, which is sufficient for the purpose of this project.
+
+>**analytics** and **bug tracking** for Electron apps
+>Cross-platform and real-time with bug reports and offline tracking. As simple as including the Node module.
+
+After signing up for a free starter account, I get presented with instructions on how to get started.
+
+Install the Nucleus module as a dependency in our project.
+
+```bash
+# Add the Nucleus module to your project
+$ npm install --save nucleus-nodejs
+```
+
+Update `public/electron.js` to import the Nucleus module and initialize it with the app ID we got when registering and creating a new app at Nucleus.
+
+```javascript
+// Import it and init with your app ID
+const Nucleus = require('nucleus-nodejs')
+Nucleus.init('5ec1855e48ae1100ea8d8389')
+```
+
+Add the below to the `createWindow` function.
+
+```javascript
+// Once everything in your app is fully loaded, call the appStarted() method
+Nucleus.appStarted()
+```
+
+Add any other relevant custom event.
+
+```javascript
+// Report events and actions
+Nucleus.track('BUTTON_CLICKED')
+```
+
+With this we are done and running the application generates statistics in the Nucleus dashboard.
+
+### Privacy considerations
+
+It is important to inform the user about what data is being collected and perhaps offer a way to opt out. This is important due to GDPR.
+
+Informing the users can be as in this example from Nucleus:
+>To get information about the devices and behavior of our users, we use Nucleus to provide analytics. This service gives us insight about how users interact with our software. It does not store any personal identifiable information. Visit their [transparency](https://www.nucleus.sh/transparency) page to get the full list of data they collect.
+
+In order to keep it simple for this project, I added the above privacy notice in `scr/App.js`, so it will be visible directly. In a production grade application, this should be handled in a more sofisticated manner.
+
+Opt out can be solved by allowing the users to `enableTracking()` and `disableTracking()`.
+
+>Provide the option to your users to disable/enable tracking as they wish.
+>Nucleus' modules support doing that with the `enableTracking()` and `disableTracking()` modules.
+
+For a full list of what data is collected and what is not, see the [Nucleus data transparency page](https://www.nucleus.sh/transparency).
+
+
