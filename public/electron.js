@@ -1,11 +1,30 @@
-const { app, BrowserWindow } = require('electron');
-const path = require("path");
+const { app, BrowserWindow, Menu, Tray } = require('electron');
+const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
 const Nucleus = require('nucleus-nodejs');
 Nucleus.init('5ec1855e48ae1100ea8d8389');
 
 let win;
+let tray;
+
+function createTray() {
+  const iconPath = path.join(__dirname, "logo16.png");
+  tray = new Tray(iconPath);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      type: 'normal',
+      click() {
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setToolTip('Yet Another React Electron Boilerplate');
+  tray.setContextMenu(contextMenu);
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -31,7 +50,10 @@ function createWindow() {
 
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createTray();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

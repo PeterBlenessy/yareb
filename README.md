@@ -15,8 +15,7 @@ I will be covering the below steps:
 - [x] [Step 7 - Setting up automatic updates](#step-7---setting-up-automatic-updates)
 - [x] [Step 8 - Setting up automated testing](#step-8---setting-up-automated-testing)
 - [x] [Step 9 - Setting up analytics](#step-9---setting-up-analytics)
-- [ ] Step 10 - Adding system tray support
-- [ ] Step 11 - Customising the application
+- [ ] [Step 10 - Customizing the application](#step-10---customizing-the-application)
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
 
@@ -687,4 +686,53 @@ Opt out can be solved by allowing the users to `enableTracking()` and `disableTr
 
 For a full list of what data is collected and what is not, see the [Nucleus data transparency page](https://www.nucleus.sh/transparency).
 
+## Step 10 - Customizing the application
 
+With the previous step finalized, I can tick off the DevOps part of this project. The boilerplate is now prepared for creating an application ready for building, automatic testing, signing, notarizing, publishing, and updating to newer versions, and also for collecting usage data which we can address in a new release. Some steps cannot be automated, such as creating accounts, but there are good guides for these.
+
+What remains now is to check out some ways to customize the application boilerplate. I am thinking of things such as adding system tray support, customizing or at least hiding the out-of-the-box Electron system menu, adding support for a React component library to simplify UI development, and actually making use of this in the application.
+
+### 10.1 - System tray support
+
+We make some changes to our `public/electron.js` file.
+
+```javascript
+const { app, BrowserWindow, Menu, Tray } = require('electron');
+
+...
+
+let tray;
+
+function createTray() {
+  const iconPath = path.join(__dirname, "logo16.png");
+  tray = new Tray(iconPath);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      type: 'normal',
+      click() {
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setToolTip('Yet Another React Electron Boilerplate');
+  tray.setContextMenu(contextMenu);
+}
+
+...
+
+app.on('ready', () => {
+  createTray();
+  createWindow();
+});
+
+```
+
+
+### 10.2 - Hiding the system menu
+
+### 10.3 - Using a component library
+
+### 10.3.1 - Adding a left panel
