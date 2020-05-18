@@ -8,6 +8,42 @@ Nucleus.init('5ec1855e48ae1100ea8d8389');
 let win;
 let tray;
 
+
+function createMainMenu() {
+  const template = [
+    {
+      label: 'My menu',
+      submenu: [
+        {
+          label: 'Hello',
+          click() {
+            console.log('Hello world!');
+          }
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Toggle developer tools',
+          role: 'toggleDevTools'
+        },
+        {
+          label: 'About',
+          role: 'about'
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Quit',
+          role: 'quit',
+        }    
+      ]
+    }
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
 function createTray() {
   const iconPath = path.join(__dirname, "logo16.png");
   tray = new Tray(iconPath);
@@ -33,7 +69,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true
     }
- });
+  });
 
   // win.loadFile('index.html');
   //win.loadURL(`file://./build/index.html`);
@@ -53,6 +89,7 @@ function createWindow() {
 app.on('ready', () => {
   createTray();
   createWindow();
+  createMainMenu();
 });
 
 app.on('window-all-closed', () => {

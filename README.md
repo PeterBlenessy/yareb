@@ -694,7 +694,7 @@ What remains now is to check out some ways to customize the application boilerpl
 
 ### 10.1 - System tray support
 
-We make some changes to our `public/electron.js` file.
+We make the below changes to our `public/electron.js` file.
 
 ```javascript
 const { app, BrowserWindow, Menu, Tray } = require('electron');
@@ -730,9 +730,65 @@ app.on('ready', () => {
 
 ```
 
+Add the `logo16.png` file which will be the system tray icon. I simply resized `public/logo512.png` to be 16x16 pixels and stored it in the same folder.
 
-### 10.2 - Hiding the system menu
+The only thing this system tray menu can do now is to show a tool tip and a menu for quiting the app.
 
-### 10.3 - Using a component library
+### 10.2 - Customizing the system menu
 
-### 10.3.1 - Adding a left panel
+Hiding the default system menu can be done by calling.
+
+```javascript
+Menu.setApplicationMenu(null);
+```
+
+Customizing it requires some more code.
+
+```javascript
+
+function createMainMenu() {
+  const template = [
+    {
+      label: 'My menu',
+      submenu: [
+        {
+          label: 'Hello',
+          click() {
+            console.log('Hello world!');
+          }
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Toggle developer tools',
+          role: 'toggleDevTools'
+        },
+        {
+          label: 'About',
+          role: 'about'
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Quit',
+          role: 'quit',
+        }    
+      ]
+    }
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
+...
+
+app.on('ready', () => {
+  createTray();
+  createWindow();
+  createMainMenu();
+});
+
+```
+
+It is generally a good idea to keep the code clean and to do that, we could break out menu handling to it's own file.
