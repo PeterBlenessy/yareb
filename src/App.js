@@ -1,10 +1,24 @@
 import React from 'react';
+import { Navbar, Button, Alignment } from '@blueprintjs/core';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
+      <Navbar className="bp3-dark">
+        <Navbar.Group align={Alignment.LEFT}>
+          <Navbar.Heading>Blueprint</Navbar.Heading>
+          <Navbar.Divider />
+          <Button className="bp3-minimal" icon="home" text="Home" />
+          <Button className="bp3-minimal" icon="document" text="Files" />
+          <span class="bp3-navbar-divider"></span>
+          <button class="bp3-button bp3-minimal bp3-icon-user"></button>
+          <button class="bp3-button bp3-minimal bp3-icon-notifications"></button>
+          <button class="bp3-button bp3-minimal bp3-icon-cog"></button>
+        </Navbar.Group>
+      </Navbar>
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

@@ -792,3 +792,59 @@ app.on('ready', () => {
 ```
 
 It is generally a good idea to keep the code clean and to do that, we could break out menu handling to it's own file.
+
+### 10.3 - Using a component library
+
+I chose to go with the [Blueprint](https://blueprintjs.com/)
+> A REACT-based UI toolkit for the web 
+
+Run
+
+```bash
+# Install the Blueprint core packages
+$ npm install --save @blueprintjs/core
+
+# Install typings for Blueprint's dependencies
+$ npm install --save @types/react @types/react-dom
+```
+
+Update `src/index.css` with:
+
+```javascript
+@import '~normalize.css';
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+```
+
+#### 10.3.1 - Adding a navigation bar
+
+Update `src/App.js`
+```javascript
+import React from 'react';
+import { Navbar, Button, Alignment } from '@blueprintjs/core';
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <Navbar className="bp3-dark">
+        <Navbar.Group align={Alignment.LEFT}>
+          <Navbar.Heading>Blueprint</Navbar.Heading>
+          <Navbar.Divider />
+          <Button className="bp3-minimal" icon="home" text="Home" />
+          <Button className="bp3-minimal" icon="document" text="Files" />
+          <span class="bp3-navbar-divider"></span>
+          <button class="bp3-button bp3-minimal bp3-icon-user"></button>
+          <button class="bp3-button bp3-minimal bp3-icon-notifications"></button>
+          <button class="bp3-button bp3-minimal bp3-icon-cog"></button>
+        </Navbar.Group>
+      </Navbar>
+
+...
+```
+
+
+For the record, I also bumped up versions for some of the dependencies to get rid of some vulnerabilities found by `npm audit` and `npm outdated`.
+
+
