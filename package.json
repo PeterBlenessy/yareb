@@ -1,7 +1,7 @@
 {
   "name": "yareb",
   "description": "Yet Another React Electron Boilerplate",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "author": "Peter Blenessy",
   "private": true,
   "dependencies": {
@@ -15,6 +15,7 @@
     "nucleus-nodejs": "^3.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "react-test-renderer": "^16.13.1",
     "typescript": "^3.9.2",
@@ -59,7 +60,7 @@
       "artifactName": "${productName}-${version}-osx.${ext}",
       "category": "public.app-category.developer-tools",
       "hardenedRuntime": true,
-      "entitlements": "./node_modules/electron-builder-notarize/entitlements.mac.inherit.plist",
+      "entitlements": "./build/entitlements.mac.inherit.plist",
       "target": [
         "zip",
         "dmg"

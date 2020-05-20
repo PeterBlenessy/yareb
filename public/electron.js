@@ -8,7 +8,6 @@ Nucleus.init('5ec1855e48ae1100ea8d8389');
 let win;
 let tray;
 
-
 function createMainMenu() {
   const template = [
     {

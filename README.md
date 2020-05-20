@@ -15,7 +15,7 @@ I will be covering the below steps:
 - [x] [Step 7 - Setting up automatic updates](#step-7---setting-up-automatic-updates)
 - [x] [Step 8 - Setting up automated testing](#step-8---setting-up-automated-testing)
 - [x] [Step 9 - Setting up analytics](#step-9---setting-up-analytics)
-- [ ] [Step 10 - Customizing the application](#step-10---customizing-the-application)
+- [x] [Step 10 - Customizing the application](#step-10---customizing-the-application)
 
 Since the Internet brought you here, I hope that you find some of this information and code useful.
 
@@ -803,9 +803,6 @@ Run
 ```bash
 # Install the Blueprint core packages
 $ npm install --save @blueprintjs/core
-
-# Install typings for Blueprint's dependencies
-$ npm install --save @types/react @types/react-dom
 ```
 
 Update `src/index.css` with:
@@ -830,21 +827,78 @@ function App() {
     <div className="App">
       <Navbar className="bp3-dark">
         <Navbar.Group align={Alignment.LEFT}>
-          <Navbar.Heading>Blueprint</Navbar.Heading>
+          <Link class="bp3-button bp3-minimal bp3-icon-home"  to="/" />
           <Navbar.Divider />
-          <Button className="bp3-minimal" icon="home" text="Home" />
-          <Button className="bp3-minimal" icon="document" text="Files" />
-          <span class="bp3-navbar-divider"></span>
-          <button class="bp3-button bp3-minimal bp3-icon-user"></button>
-          <button class="bp3-button bp3-minimal bp3-icon-notifications"></button>
-          <button class="bp3-button bp3-minimal bp3-icon-cog"></button>
+          <Link class="bp3-button bp3-minimal bp3-icon-settings" to="/settings/" />
+          <Navbar.Divider />
+          <Link class="bp3-button bp3-minimal bp3-icon-info-sign" to="/info/" />
         </Navbar.Group>
       </Navbar>
 
 ...
 ```
 
-
 For the record, I also bumped up versions for some of the dependencies to get rid of some vulnerabilities found by `npm audit` and `npm outdated`.
 
+### 10.4 Using routes for pages
+
+I experimented a bit with adding different pages to the application, such as Home, Settings and Info. I used `react-router-dom` for this. I guess it is one of several options.
+
+Also, I kept this experiment simple and didn't break out the pages into separate files, which is advisable in the long run.
+
+Run:
+```dash
+$ npm install --save react-router-dom
+```
+
+```javascript
+...
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
+
+...
+
+function Settings() {
+  return (
+    <h2>This is a potential settings page</h2>
+  );
+}
+
+...
+
+function App() {
+  return (
+    <Router>
+    <div className="App">
+      <Navbar className="bp3-dark">
+        <Navbar.Group align={Alignment.LEFT}>
+          <Link class="bp3-button bp3-minimal bp3-icon-home"  to="/" />
+          <Navbar.Divider />
+          <Link class="bp3-button bp3-minimal bp3-icon-settings" to="/settings/" />
+          <Navbar.Divider />
+          <Link class="bp3-button bp3-minimal bp3-icon-info-sign" to="/info/" />
+        </Navbar.Group>
+      </Navbar>
+
+      <header className="App-header">
+
+        <img src={logo} className="App-logo" alt="logo" />
+
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/settings/" component={Settings} />
+          <Route path="/info/" component={Info} />
+          <Redirect to="/" />
+        </Switch>
+
+      </header>
+
+    </div>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+It is worth noting here that `<Redirect to="/" />` is used to set `home` as the default route and also redirect to home  when an unknow route is provided. Also, kind of important to use `exact` for `path="/"` in order to not match it for the other routes also containing it.
 
