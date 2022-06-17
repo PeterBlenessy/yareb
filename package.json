@@ -48,7 +48,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^11.5.0",
+    "electron": "^15.5.5",
     "electron-builder": "^22.6.1",
     "electron-builder-notarize": "^1.1.2",
     "electron-notarize": "^0.3.0"
