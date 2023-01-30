@@ -1,5 +1,7 @@
 # yareb - Yet Another React Electron Boilerplate
 
+> **Warning** Although the steps described below may be useful for educational purposes, be aware, that the code is not updated anymore, and package references may be outdated and contain security vulnerabilities.
+
 ## Intro
 
 On my path to obtaining some hands-on practical experience in DevOps, I decided to kill two birds with one stone, and decided to learn how to build cross platform applications using Electron and React while I'm at it. This README documents my learning path and the repo reflects the outcome. Since the end result is essentially Yet Another React Electron Boilerplate, I decided to call it just that - yareb.
